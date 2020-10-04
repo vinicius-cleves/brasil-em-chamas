@@ -127,32 +127,33 @@ function get_subregion(feature, target_area){
 }
 
 function fill_area(cities, neighbors_idxs, initial_city, target_area){
-  // TODO: Deal with case where the selected city is bigger than target_area or the final 
-  // total area is too far from target (because every city is too big)
+  // TODO: Partial area at the end can be totally disconected from the main blob. Fix this
   
   let pushed_candidates = []
-  const all_cities = []
+  const painted_cities = []
   let candidates = []
   let total_area = 0
 
+  //Deals with initial city
   let candidates_with_area = [{
     city: initial_city,
     area: feature_area(initial_city)
   }]
 
   if(candidates_with_area[0].area < target_area){
-    all_cities.push(candidates_with_area[0].city)
+    painted_cities.push(candidates_with_area[0].city)
     total_area += candidates_with_area[0].area
     pushed_candidates.push(candidates_with_area[0].city)
   }
+  //Deals with neighbors
   while (pushed_candidates.length > 0){
     //populate candidates
-    let all_cities_ids = all_cities.map(cur=>cur.id)
+    let painted_cities_ids = painted_cities.map(cur=>cur.id)
     candidates = pushed_candidates
       .map(cur=>find_neighbors(cur, cities, neighbors_idxs))
       .reduce((acc, cur, idx, arr)=>([...acc, ...cur]), [])
       .filter((cur, idx, arr)=>arr.findIndex(cur2=>cur2.id==cur.id)==idx)
-      .filter(cur=>!all_cities_ids.includes(cur.id))
+      .filter(cur=>!painted_cities_ids.includes(cur.id))
     //calculate area for candidates
     candidates_with_area = candidates.map(cur=>({
       city: cur,
@@ -162,71 +163,83 @@ function fill_area(cities, neighbors_idxs, initial_city, target_area){
     pushed_candidates = []
     for (let candidate of candidates_with_area){
       if (total_area + candidate.area <= target_area){
-        all_cities.push(candidate.city)
+        painted_cities.push(candidate.city)
         total_area += candidate.area
         pushed_candidates.push(candidate.city)
       } 
     }
   }
-  console.log('antes', total_area)
+  //Deals with incomplete neighbor to fill the remaining gap
   const smaller_candidate = candidates_with_area[candidates_with_area.length - 1]
   const subregion = get_subregion(smaller_candidate.city, target_area - total_area)
   if(subregion != null){
-    all_cities.push(subregion)
+    painted_cities.push(subregion)
     total_area += feature_area(subregion)
   }
-  console.log('depois', total_area)
-  return [all_cities, total_area]
 
+  return [painted_cities, total_area]
 }
 
 export default class MyMap extends Component {
   constructor(props){
     super(props)
     this.state = {
-      coords: {
-        lat: null,
-        lng: null
-      },
-      lat: -12.503748,
-      lng: -55.149975,
-      zoom: 4,
+      painted_cities: null, 
+      total_area: null
     }
     const Municipios = topojson.feature(Municipios_topojson, Municipios_topojson.objects.Munic) 
     this.features_with_bbox = geojson_bbox(Municipios.features)
     const geometries = Municipios_topojson.objects.Munic.geometries
     this.neighbors_idxs = topojson.neighbors(geometries)
   }
+  
+  bindMap = (el) => {
+    this.map = el.leafletElement;
+  }
 
-  render() {
-    const {lat, lng} = this.state.coords
+  onClick = (e) => {
     const features_with_bbox = this.features_with_bbox
     const neighbors_idxs = this.neighbors_idxs
-    var all_cities = null
-    var total_area = null
-    if (lng !== null){
-      const point_city = find_point_region([lng, lat], features_with_bbox)
-      if (point_city){
-        var [all_cities, total_area] = fill_area(features_with_bbox, neighbors_idxs, point_city, 23000)    
-      }
+
+    const {lng, lat} = e.latlng
+    
+    const point_city = find_point_region([lng, lat], features_with_bbox)
+    if (point_city){
+      var [painted_cities, total_area] = fill_area(features_with_bbox, neighbors_idxs, point_city, 23000)    
+      this.setState({painted_cities, total_area}, ()=>{
+        //TODO: zoom on bound box of the painted region, not on the selected point
+        this.map.flyTo({lng, lat}, 8, {
+          animate: true,
+          duration: 1
+        })
+      })
     }
     
+  }
+
+  render() {
+    const {painted_cities, total_area} = this.state
+
     console.log('rendering', total_area)
     return (
       <Map 
-        center={[this.state.lat, this.state.lng]} 
-        zoom={this.state.zoom} 
+        center={{
+          lat: -12.503748,
+          lng: -55.149975,
+        }} 
+        zoom={4} 
         style={{ width: '100%', height: '100%',}}
-        onclick={(e)=>this.setState({coords:e.latlng})}
+        ref={this.bindMap}
+        onclick={this.onClick}
       >
       <TileLayer
         attribution='&copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-      {all_cities !== null && 
+      {painted_cities !== null && 
         <GeoJSON 
-          key={all_cities.map(cur=>cur.id).reduce((acc, cur)=>acc+cur)} 
-          data={all_cities} 
+          key={painted_cities.map(cur=>cur.id).reduce((acc, cur)=>acc+cur)} 
+          data={painted_cities} 
           style={{stroke: false, color:'#f00'}}/>}
       </Map>
       )
