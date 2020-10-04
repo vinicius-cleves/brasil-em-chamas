@@ -61,17 +61,90 @@ function find_neighbors(target, cities, neighbors_idxs){
   return feature_neighbors
 }
 
+function area(coords){
+  return topojson.sphericalRingArea(coords) * 6371**2
+}
+
 function feature_area(feature){
-  return topojson.sphericalRingArea(feature.geometry.coordinates[0]) * 6371**2
+  return area(feature.geometry.coordinates[0])
+}
+
+function winding_order_is_clockwise(coords){
+  // Source: https://stackoverflow.com/questions/1165647/how-to-determine-if-a-list-of-polygon-points-are-in-clockwise-order
+  let area = 0
+  for(let i=0; i<coords.length-1; i++){
+    area += (coords[i+1][0] - coords[i][0]) * (coords[i+1][1] + coords[i][1])
+  }
+  area += (coords[0][0] - coords[coords.length-1][0]) * (coords[0][1] + coords[coords.length-1][1])
+  return area > 0
+}
+
+function fix_winding(coords){
+  if(area(coords)<510e6/2){
+    return coords
+  } else {
+    return coords.reverse()
+  }
+}
+
+function get_subcoords(coords, npoints){
+  return [...coords.slice(0, npoints), coords[0]]
+}
+
+function get_subregion(feature, target_area){
+  const coords = feature.geometry.coordinates[0]
+  let lower = 3
+  let upper = coords.length
+  let newpoint
+
+  if(area(fix_winding(get_subcoords(coords, lower))) > target_area){
+    return null
+  }
+  while (lower != upper - 1){
+    // binary search
+    newpoint = Math.ceil((lower + upper)/2)
+    if(area(fix_winding(get_subcoords(coords, newpoint))) > target_area){
+      upper = newpoint
+    } else {
+      lower = newpoint
+    }
+  }
+  const subregion = {
+    ...feature, 
+    geometry:{
+      ...feature.geometry,
+      coordinates:[fix_winding(get_subcoords(coords, lower))],
+      id: -1
+    },
+    properties:{
+      ...feature.properties,
+      codigo: -1,
+      name: feature.properties.name + ' - partial'
+    }
+  }
+  return subregion
+
 }
 
 function fill_area(cities, neighbors_idxs, initial_city, target_area){
   // TODO: Deal with case where the selected city is bigger than target_area or the final 
   // total area is too far from target (because every city is too big)
-  let pushed_candidates = [initial_city]
-  const all_cities = [initial_city]
+  
+  let pushed_candidates = []
+  const all_cities = []
   let candidates = []
-  let total_area = feature_area(initial_city)
+  let total_area = 0
+
+  let candidates_with_area = [{
+    city: initial_city,
+    area: feature_area(initial_city)
+  }]
+
+  if(candidates_with_area[0].area < target_area){
+    all_cities.push(candidates_with_area[0].city)
+    total_area += candidates_with_area[0].area
+    pushed_candidates.push(candidates_with_area[0].city)
+  }
   while (pushed_candidates.length > 0){
     //populate candidates
     let all_cities_ids = all_cities.map(cur=>cur.id)
@@ -81,7 +154,7 @@ function fill_area(cities, neighbors_idxs, initial_city, target_area){
       .filter((cur, idx, arr)=>arr.findIndex(cur2=>cur2.id==cur.id)==idx)
       .filter(cur=>!all_cities_ids.includes(cur.id))
     //calculate area for candidates
-    const candidates_with_area = candidates.map(cur=>({
+    candidates_with_area = candidates.map(cur=>({
       city: cur,
       area: feature_area(cur)
     })).sort((a, b) => (b.area - a.area))
@@ -95,6 +168,14 @@ function fill_area(cities, neighbors_idxs, initial_city, target_area){
       } 
     }
   }
+  console.log('antes', total_area)
+  const smaller_candidate = candidates_with_area[candidates_with_area.length - 1]
+  const subregion = get_subregion(smaller_candidate.city, target_area - total_area)
+  if(subregion != null){
+    all_cities.push(subregion)
+    total_area += feature_area(subregion)
+  }
+  console.log('depois', total_area)
   return [all_cities, total_area]
 
 }
