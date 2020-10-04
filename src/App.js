@@ -1,15 +1,16 @@
 import React, { Component, Fragment } from 'react';
 // import axios from 'axios';
 import Map from './components/Map'
-
+import WelcomeModal from './components/WelcomeModal'
 
 class App extends Component {
-  state = {
-    incidents: [],
-  }
   render() {
     return (
-      <Map incidents={this.state.incidents}/>
+      <div style={{ width: '100%', height: '100%',}}>
+        <WelcomeModal/>
+        <Map/>
+      </div>
+      
     );
   }
  }
