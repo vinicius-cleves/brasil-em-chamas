@@ -3,6 +3,7 @@ import { Map, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import * as topojson from "topojson";
 import Municipios_topojson from './municipio.json'
+import ReactGA from 'react-ga';
 
 function point_in_polygon(point, vs) {
   // ray-casting algorithm based on
@@ -184,8 +185,7 @@ export default class MyMap extends Component {
   constructor(props){
     super(props)
     this.state = {
-      painted_cities: null, 
-      total_area: null
+      painted_cities: null
     }
     const Municipios = topojson.feature(Municipios_topojson, Municipios_topojson.objects.Munic) 
     this.features_with_bbox = geojson_bbox(Municipios.features)
@@ -205,8 +205,20 @@ export default class MyMap extends Component {
     
     const point_city = find_point_region([lng, lat], features_with_bbox)
     if (point_city){
-      var [painted_cities, total_area] = fill_area(features_with_bbox, neighbors_idxs, point_city, 23000)    
-      this.setState({painted_cities, total_area}, ()=>{
+      const [painted_cities, total_area] = fill_area(features_with_bbox, neighbors_idxs, point_city, 23000) 
+      const {codigo, name, uf} = point_city.properties
+      ReactGA.event({
+        category: 'Debugging',
+        action: 'Total area',
+        value: Math.ceil(total_area)
+      })
+      ReactGA.event({
+        category: 'User',
+        action: 'Selected city',
+        label:  `${codigo}-${name}-${uf}`,
+        value: 1
+      })
+      this.setState({painted_cities}, ()=>{
         //TODO: zoom on bound box of the painted region, not on the selected point
         this.map.flyTo({lng, lat}, 8, {
           animate: true,
@@ -218,9 +230,7 @@ export default class MyMap extends Component {
   }
 
   render() {
-    const {painted_cities, total_area} = this.state
-
-    console.log('rendering', total_area)
+    const {painted_cities} = this.state
     return (
       <Map 
         center={{
