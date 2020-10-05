@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/queimadas-br/precache-manifest.cbd796ce9ee8ed85fec43384587a7f36.js"
+  "/queimadas-br/precache-manifest.8f549c1a25db238888e4ec135c3da68b.js"
 );
 
 self.addEventListener('message', (event) => {
