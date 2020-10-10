@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/brasil-em-chamas/static/css/main.ef7bf322.chunk.css",
-    "main.js": "/brasil-em-chamas/static/js/main.7fb990b9.chunk.js",
-    "main.js.map": "/brasil-em-chamas/static/js/main.7fb990b9.chunk.js.map",
+    "main.js": "/brasil-em-chamas/static/js/main.56b4147e.chunk.js",
+    "main.js.map": "/brasil-em-chamas/static/js/main.56b4147e.chunk.js.map",
     "runtime-main.js": "/brasil-em-chamas/static/js/runtime-main.16444a91.js",
     "runtime-main.js.map": "/brasil-em-chamas/static/js/runtime-main.16444a91.js.map",
     "static/css/2.a4567992.chunk.css": "/brasil-em-chamas/static/css/2.a4567992.chunk.css",
     "static/js/2.ba602b22.chunk.js": "/brasil-em-chamas/static/js/2.ba602b22.chunk.js",
     "static/js/2.ba602b22.chunk.js.map": "/brasil-em-chamas/static/js/2.ba602b22.chunk.js.map",
     "index.html": "/brasil-em-chamas/index.html",
-    "precache-manifest.0ba47e6eecc69fe50113aea0a11cc272.js": "/brasil-em-chamas/precache-manifest.0ba47e6eecc69fe50113aea0a11cc272.js",
+    "precache-manifest.11e4a2ed394e96d0b3edc17ad48d177b.js": "/brasil-em-chamas/precache-manifest.11e4a2ed394e96d0b3edc17ad48d177b.js",
     "service-worker.js": "/brasil-em-chamas/service-worker.js",
     "static/css/2.a4567992.chunk.css.map": "/brasil-em-chamas/static/css/2.a4567992.chunk.css.map",
     "static/css/main.ef7bf322.chunk.css.map": "/brasil-em-chamas/static/css/main.ef7bf322.chunk.css.map",
@@ -20,6 +20,6 @@
     "static/css/2.a4567992.chunk.css",
     "static/js/2.ba602b22.chunk.js",
     "static/css/main.ef7bf322.chunk.css",
-    "static/js/main.7fb990b9.chunk.js"
+    "static/js/main.56b4147e.chunk.js"
   ]
 }

@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "4907a4a259a7f42fcdb57348947b0b08",
+    "revision": "7d38efd4aed92080202552cbe9ccd950",
     "url": "/brasil-em-chamas/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/brasil-em-chamas/static/css/2.a4567992.chunk.css"
   },
   {
-    "revision": "0a1c90b5e028a1f050db",
+    "revision": "9b2aaac027a90d139c2c",
     "url": "/brasil-em-chamas/static/css/main.ef7bf322.chunk.css"
   },
   {
@@ -20,8 +20,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/brasil-em-chamas/static/js/2.ba602b22.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "0a1c90b5e028a1f050db",
-    "url": "/brasil-em-chamas/static/js/main.7fb990b9.chunk.js"
+    "revision": "9b2aaac027a90d139c2c",
+    "url": "/brasil-em-chamas/static/js/main.56b4147e.chunk.js"
   },
   {
     "revision": "201374cc9849b44a6cdf",

@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/brasil-em-chamas/precache-manifest.0ba47e6eecc69fe50113aea0a11cc272.js"
+  "/brasil-em-chamas/precache-manifest.11e4a2ed394e96d0b3edc17ad48d177b.js"
 );
 
 self.addEventListener('message', (event) => {
