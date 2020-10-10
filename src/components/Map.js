@@ -220,7 +220,7 @@ export default class MyMap extends Component {
       })
       this.setState({painted_cities}, ()=>{
         //TODO: zoom on bound box of the painted region, not on the selected point
-        this.map.flyTo({lng, lat}, 8, {
+        this.map.flyTo({lng, lat}, 7.5, {
           animate: true,
           duration: 1
         })
