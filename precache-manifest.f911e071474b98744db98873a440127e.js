@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "5e26f509163db71bf3d03b32de4986eb",
+    "revision": "10ddbba1896ee48aa263891d0912fb56",
     "url": "/queimadas-br/index.html"
   },
   {
