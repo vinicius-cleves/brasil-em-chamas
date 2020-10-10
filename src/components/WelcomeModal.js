@@ -45,7 +45,7 @@ export default class WelcomeModal extends Component {
           Sabe o quanto é isso? Clique no mapa e veja uma região 
           equivalente a destruida no pantanal só esse ano.
         </p>
-        <p style={{textAlign: 'right', fontSize:'small', marginTop: '30px'}}>Encontrou um Bug? Nos ajude reportando-o em placeholder@gmail.com</p>
+        <p style={{textAlign: 'right', fontSize:'small', marginTop: '30px'}}>Encontrou um Bug? Nos ajude reportando-o em email.brasilemchamas@gmail.com</p>
       </Modal>
     )
   }
