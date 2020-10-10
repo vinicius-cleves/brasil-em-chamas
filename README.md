@@ -1,4 +1,4 @@
-# queimadas-br
+# brasil-em-chamas
 A visualization to raise awareness about the forest fire destruction in Brazil
 
 ## About
@@ -9,4 +9,4 @@ Brazil is such a huge country that people don't get the idea of how much is bein
 
 The visualization is an interactive map that one can choose a location and it will show the equivalent area that is being destructed on the Pantanal (will include amazon soon)
 
-Go to vinicius-cleves.github.io/queimadas-br to navegate on the map.
+Go to vinicius-cleves.github.io/brasil-em-chamas to navegate on the map.
