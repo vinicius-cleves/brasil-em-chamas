@@ -9,4 +9,4 @@ Brazil is such a huge country that people don't get the idea of how much is bein
 
 The visualization is an interactive map that one can choose a location and it will show the equivalent area that is being destructed on the Pantanal (will include amazon soon)
 
-Go to the [website](vinicius-cleves.github.io/brasil-em-chamas) to navegate on the map.
+Go to the [website](https://vinicius-cleves.github.io/brasil-em-chamas/) to navegate on the map.
